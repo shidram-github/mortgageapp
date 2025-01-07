@@ -1,0 +1,74 @@
+openapi: "3.1.0"
+info:
+  title: "Mortgageapp API"
+  description: "Mortgageapp API specification"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:8085"
+paths:
+  /api/interest-rates:
+    get:
+      summary: "GET api/interest-rates"
+      operationId: "getInterestRates"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/MortgageRate"
+  /api/mortgage-check:
+    post:
+      summary: "POST api/mortgage-check"
+      operationId: "checkMortgage"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MortgageCheckRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MortgageCheckResponse"
+components:
+  schemas:
+    MortgageRate:
+      type: "object"
+      properties:
+        maturityPeriod:
+          type: "integer"
+          format: "int32"
+        interestRate:
+          type: "number"
+          format: "double"
+        lastUpdate:
+          type: "string"
+          format: "date-time"
+    MortgageCheckRequest:
+      type: "object"
+      properties:
+        income:
+          type: "number"
+          format: "double"
+        maturityPeriod:
+          type: "integer"
+          format: "int32"
+        loanValue:
+          type: "number"
+          format: "double"
+        homeValue:
+          type: "number"
+          format: "double"
+    MortgageCheckResponse:
+      type: "object"
+      properties:
+        feasible:
+          type: "boolean"
+        monthlyCost:
+          type: "string"
