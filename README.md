@@ -56,6 +56,26 @@ mvn test
 
 ## API Endpoints
 
+### Get Interest Rates
+
+- **URL:** `/api/interest-rates`
+- **Method:** `GET`
+- **Response:**
+    ```json
+    [
+      {
+        "maturityPeriod": 10,
+        "interestRate": 2.5,
+        "lastUpdate": "2024-12-31T14:21:26.9949595"
+      },
+      {
+        "maturityPeriod": 15,
+        "interestRate": 3.0,
+        "lastUpdate": "2024-12-31T14:21:26.9949595"
+      }
+    ]
+    ```
+
 ### Check Mortgage Feasibility
 
 - **URL:** `/api/mortgage-check`
