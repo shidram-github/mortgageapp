@@ -35,7 +35,6 @@ public class MortgageControllerTest {
     @Test
     public void testGetInterestRates() throws Exception {
         List<MortgageRate> rates = Arrays.asList(new MortgageRate(1, 3.5, LocalDateTime.now()), new MortgageRate(2, 4.0, LocalDateTime.now()));
-
         when(mortgageService.getMortgageRates()).thenReturn(rates);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/interest-rates")
                 .accept(MediaType.APPLICATION_JSON))
@@ -58,14 +57,6 @@ public class MortgageControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(responseString));
-    }
-
-    @Test
-    public void testGetInterestRatesNotFound() throws Exception {
-        when(mortgageService.getMortgageRates()).thenReturn(null);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/interest-rates")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
     }
 
 }

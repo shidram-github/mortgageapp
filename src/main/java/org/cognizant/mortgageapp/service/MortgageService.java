@@ -33,11 +33,9 @@ public class MortgageService {
                 new MortgageRate(30, 4.0, LocalDateTime.now())
         ));
         mortgageRates.sort(Comparator.comparingInt(MortgageRate::getMaturityPeriod));
-        log.info("Mortgage rates initialized: {}", mortgageRates);
     }
 
     public List<MortgageRate> getMortgageRates() {
-        log.info("Fetching mortgage rates");
         return mortgageRates;
     }
 
