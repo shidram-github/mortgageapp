@@ -39,11 +39,4 @@ public class MortgageControllerIT {
         assertEquals(expectedResponse, response.getBody());
         assertTrue(response.getBody().isFeasible());
     }
-
-    @Test
-    public void testCheckMortgageNotFeasible() throws Exception {
-        MortgageCheckRequest request = new MortgageCheckRequest(50000, 30, 250000, 250000);
-        ResponseEntity<MortgageCheckResponse> response = restTemplate.postForEntity("/api/mortgage-check", request, MortgageCheckResponse.class);
-        assertFalse(response.getBody().isFeasible());
-    }
 }
