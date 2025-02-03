@@ -5,6 +5,7 @@ import org.cognizant.mortgageapp.model.MortgageCheckRequest;
 import org.cognizant.mortgageapp.model.MortgageCheckResponse;
 import org.cognizant.mortgageapp.model.MortgageRate;
 import org.cognizant.mortgageapp.service.MortgageService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +21,12 @@ public class MortgageController {
     }
 
     @GetMapping("/interest-rates")
-    public List<MortgageRate> getInterestRates() {
-        return mortgageService.getMortgageRates();
+    public ResponseEntity<List<MortgageRate>> getInterestRates() {
+        return ResponseEntity.ok(mortgageService.getMortgageRates());
     }
 
     @PostMapping("/mortgage-check")
-    public MortgageCheckResponse checkMortgage(@RequestBody @Valid MortgageCheckRequest request) {
-        return mortgageService.checkMortgage(request);
+    public ResponseEntity<MortgageCheckResponse> checkMortgage(@RequestBody @Valid MortgageCheckRequest request) {
+        return ResponseEntity.ok(mortgageService.checkMortgage(request));
     }
 }
