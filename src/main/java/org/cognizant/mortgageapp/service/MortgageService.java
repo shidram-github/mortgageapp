@@ -1,7 +1,7 @@
 package org.cognizant.mortgageapp.service;
 
 import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.cognizant.mortgageapp.model.MortgageCheckRequest;
 import org.cognizant.mortgageapp.model.MortgageCheckResponse;
 import org.cognizant.mortgageapp.model.MortgageRate;
@@ -15,7 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
-@Slf4j
+@Log4j2
 public class MortgageService {
     private final List<MortgageRate> mortgageRates = new ArrayList<>();
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
