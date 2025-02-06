@@ -1,7 +1,6 @@
 package org.cognizant.mortgageapp.service;
 
 import jakarta.annotation.PostConstruct;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.cognizant.mortgageapp.model.MortgageCheckRequest;
 import org.cognizant.mortgageapp.model.MortgageCheckResponse;
