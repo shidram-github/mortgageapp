@@ -11,6 +11,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -37,6 +39,6 @@ public class MortgageControllerIT {
         ResponseEntity<MortgageCheckResponse> response = restTemplate.postForEntity("/api/mortgage-check", request, MortgageCheckResponse.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedResponse, response.getBody());
-        assertTrue(response.getBody().isFeasible());
+        assertTrue(Objects.requireNonNull(response.getBody()).feasible());
     }
 }

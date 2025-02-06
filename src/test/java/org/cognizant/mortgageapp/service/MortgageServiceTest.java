@@ -32,24 +32,22 @@ public class MortgageServiceTest {
     public void testCheckMortgageFeasible() {
         MortgageCheckRequest request = new MortgageCheckRequest(50000, 30, 200000, 250000);
         MortgageCheckResponse response = mortgageService.checkMortgage(request);
-        assertTrue(response.isFeasible());
-        assertNotEquals("0.00",response.getMonthlyCost());
+        assertTrue(response.feasible());
+        assertNotEquals("0.00",response.monthlyCost());
     }
 
     @Test
     public void testCheckMortgageNotFeasible() {
         MortgageCheckRequest request = new MortgageCheckRequest(50000, 30, 300000, 250000);
         MortgageCheckResponse response = mortgageService.checkMortgage(request);
-        assertFalse(response.isFeasible());
-        assertEquals("0", response.getMonthlyCost());
+        assertFalse(response.feasible());
+        assertEquals("0", response.monthlyCost());
     }
 
     @Test
     public void testCheckMortgageInvalidMaturityPeriod() {
         MortgageCheckRequest request = new MortgageCheckRequest(50000, 25, 200000, 250000);
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            mortgageService.checkMortgage(request);
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> mortgageService.checkMortgage(request));
         assertEquals("Invalid maturity period", exception.getMessage());
     }
 }

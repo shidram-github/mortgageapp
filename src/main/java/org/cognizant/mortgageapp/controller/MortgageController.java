@@ -27,6 +27,7 @@ public class MortgageController {
 
     @PostMapping("/mortgage-check")
     public ResponseEntity<MortgageCheckResponse> checkMortgage(@RequestBody @Valid MortgageCheckRequest request) {
+        System.out.println("Checking Mortgage:::"+Thread.currentThread().getName());
         return ResponseEntity.ok(mortgageService.checkMortgage(request));
     }
 }

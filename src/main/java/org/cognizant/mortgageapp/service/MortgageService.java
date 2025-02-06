@@ -32,7 +32,7 @@ public class MortgageService {
                 new MortgageRate(20, 3.5, LocalDateTime.now()),
                 new MortgageRate(30, 4.0, LocalDateTime.now())
         ));
-        mortgageRates.sort(Comparator.comparingInt(MortgageRate::getMaturityPeriod));
+        mortgageRates.sort(Comparator.comparingInt(MortgageRate::maturityPeriod));
     }
 
     public List<MortgageRate> getMortgageRates() {
@@ -42,43 +42,37 @@ public class MortgageService {
     /**
      * Checks the feasibility of a mortgage based on the provided request.
      *
-     * @param request the mortgage check request containing income, maturity period, loan value, and home value
+     * @param mortgageCheckRequest the mortgage check request containing income, maturity period, loan value, and home value
      * @return a response indicating whether the mortgage is feasible and the monthly cost if feasible
      * @throws IllegalArgumentException if the maturity period is invalid
      */
-    public MortgageCheckResponse checkMortgage(MortgageCheckRequest request) {
-        log.info("Checking mortgage feasibility for request: {}", request);
+    public MortgageCheckResponse checkMortgage(MortgageCheckRequest mortgageCheckRequest) {
+        log.info("Checking mortgage feasibility for request: {}", mortgageCheckRequest);
 
-        MortgageCheckResponse response = new MortgageCheckResponse();
-
-        double maxLoanValue = request.getIncome() * 4;
-        boolean isLoanWithinIncome = request.getLoanValue() <= maxLoanValue;
-        boolean isLoanWithinHomeValue = request.getLoanValue() <= request.getHomeValue();
+        double maxLoanValue = mortgageCheckRequest.income() * 4;
+        boolean isLoanWithinIncome = mortgageCheckRequest.loanValue() <= maxLoanValue;
+        boolean isLoanWithinHomeValue = mortgageCheckRequest.loanValue() <= mortgageCheckRequest.homeValue();
 
         boolean feasible = isLoanWithinIncome && isLoanWithinHomeValue;
-
-        response.setFeasible(feasible);
+        double monthlyCosts=0;
         decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
 
         if (feasible) {
             double interestRate = mortgageRates.stream()
-                    .filter(rate -> rate.getMaturityPeriod() == request.getMaturityPeriod())
-                    .map(MortgageRate::getInterestRate)
+                    .filter(rate -> rate.maturityPeriod() == mortgageCheckRequest.maturityPeriod())
+                    .map(MortgageRate::interestRate)
                     .findFirst()
                     .orElseThrow(() -> {
-                        log.error("Invalid maturity period: {}", request.getMaturityPeriod());
+                        log.error("Invalid maturity period: {}", mortgageCheckRequest.maturityPeriod());
                         return new IllegalArgumentException("Invalid maturity period");
                     });
 
-            double monthlyCosts = getMonthlyCosts(request, interestRate);
-            response.setMonthlyCost(decimalFormat.format(monthlyCosts));
-
+            monthlyCosts = getMonthlyCosts(mortgageCheckRequest, interestRate);
             log.info("Mortgage feasible with monthly cost: {}", decimalFormat.format(monthlyCosts));
         } else {
-            response.setMonthlyCost(decimalFormat.format(0));
             log.info("Mortgage not feasible");
         }
-        return response;
+        return new MortgageCheckResponse(feasible, decimalFormat.format(monthlyCosts));
     }
 
     /**
@@ -90,13 +84,13 @@ public class MortgageService {
      */
     private double getMonthlyCosts(MortgageCheckRequest request, double interestRate) {
         double monthlyRate = (interestRate / 100) / 12;    // Monthly interest rate
-        int numberOfPayments = request.getMaturityPeriod() * 12;   // Total number of monthly payments
+        int numberOfPayments = request.maturityPeriod() * 12;   // Total number of monthly payments
 
         // formula: (1+monthlyRate)^numberOfPayments or (1+r)^n
         double mathPowFactor =Math.pow(1+monthlyRate, numberOfPayments);
 
         //MonthlyCosts = Principal(loanValue) * monthlyRate * [(1+r)^n]/ [(1+r)^n - 1]
-        return request.getLoanValue() * (monthlyRate * mathPowFactor)/(mathPowFactor -1);
+        return request.loanValue() * (monthlyRate * mathPowFactor)/(mathPowFactor -1);
     }
 
 }
